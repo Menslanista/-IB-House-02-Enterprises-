@@ -7,6 +7,7 @@ import Amenities from './components/Amenities';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import RevealOnScroll from './components/RevealOnScroll';
 import { NAV_LINKS, ROOM_TYPES, AMENITIES, TESTIMONIALS, WHATSAPP_LINK, FEATURES_LIST } from './constants';
 
 const App: React.FC = () => {
@@ -15,11 +16,26 @@ const App: React.FC = () => {
       <Header navLinks={NAV_LINKS} whatsappLink={WHATSAPP_LINK} />
       <main>
         <Hero whatsappLink={WHATSAPP_LINK} />
-        <Rooms roomTypes={ROOM_TYPES} whatsappLink={WHATSAPP_LINK} />
-        <Features features={FEATURES_LIST} />
-        <Amenities amenities={AMENITIES} />
-        <Testimonials testimonials={TESTIMONIALS} />
-        <Contact whatsappLink={WHATSAPP_LINK} />
+        
+        <RevealOnScroll>
+          <Rooms roomTypes={ROOM_TYPES} whatsappLink={WHATSAPP_LINK} />
+        </RevealOnScroll>
+        
+        <RevealOnScroll>
+          <Features features={FEATURES_LIST} />
+        </RevealOnScroll>
+        
+        <RevealOnScroll>
+          <Amenities amenities={AMENITIES} />
+        </RevealOnScroll>
+        
+        <RevealOnScroll>
+          <Testimonials testimonials={TESTIMONIALS} />
+        </RevealOnScroll>
+        
+        <RevealOnScroll>
+          <Contact whatsappLink={WHATSAPP_LINK} />
+        </RevealOnScroll>
       </main>
       <Footer navLinks={NAV_LINKS} />
     </div>
