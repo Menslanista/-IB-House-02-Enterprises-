@@ -1,31 +1,1005 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-g" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IB House 02 Enterprises - Luxury Short Stays</title>
+    <meta name="description" content="A luxurious and modern landing page for IB House 02 Enterprises, showcasing premium short-stay apartments in Lagos.">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    
+    <!-- Babel for in-browser JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <style>
-      /* Smooth scrolling for anchor links */
       html {
         scroll-behavior: smooth;
       }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #111827; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4b5563; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #d97706; 
+      }
+      
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>
-  <script type="importmap">
+
+    <!-- Import Map for React and Lucide Icons -->
+    <script type="importmap">
 {
   "imports": {
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.553.0",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
-</head>
-  <body class="bg-gray-900">
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white font-sans selection:bg-amber-500 selection:text-black transition-colors duration-300">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+
+    <script type="text/babel" data-type="module" data-presets="typescript,react">
+      import React, { useState, useEffect, useRef } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { 
+        Menu, X, Wifi, Coffee, Shield, Users, Facebook, Twitter, 
+        Instagram, Linkedin, Zap, MapPin, Sparkles, Star, 
+        ArrowRight, Phone, Mail, CheckCircle, Loader2, Share2, 
+        Link as LinkIcon, ShieldCheck, ChevronDown, ChevronUp, Sun, Moon,
+        Send, AlertCircle
+      } from 'lucide-react';
+
+      // --- CONSTANTS & DATA ---
+      const WHATSAPP_LINK = "https://wa.me/message/E562AOP4Q6H7D1";
+      const LOGO_URL = "https://iili.io/fBciH9j.png";
+
+      const NAV_LINKS = [
+        { href: '#home', label: 'Home' },
+        { href: '#rooms', label: 'Rooms' },
+        { href: '#features', label: 'Features' },
+        { href: '#amenities', label: 'Amenities' },
+        { href: '#contact', label: 'Contact' },
+      ];
+
+      const HERO_IMAGES = [
+        'https://iili.io/fBciJAx.jpg',
+        'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1980&auto=format&fit=crop'
+      ];
+
+      const ROOM_TYPES = [
+        {
+          name: 'Deluxe Room',
+          price: '₦120,000',
+          image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop',
+          features: ['King Bed', 'City View', 'Free WiFi', 'Breakfast Included', 'Smart TV']
+        },
+        {
+          name: 'Executive Suite',
+          price: '₦200,000',
+          image: 'https://images.unsplash.com/photo-1590490360182-f33d5e6a385c?q=80&w=2072&auto=format&fit=crop',
+          features: ['Separate Living Area', 'Panoramic View', 'Premium Amenities', 'Concierge Service', 'Minibar']
+        },
+        {
+          name: 'Presidential Suite',
+          price: '₦350,000',
+          image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop',
+          features: ['Private Terrace', 'Butler Service', 'Luxury Interior', 'Airport Transfer', 'Jacuzzi']
+        }
+      ];
+
+      const AMENITIES = [
+        { icon: Wifi, name: 'Free WiFi', description: 'High-speed fibre internet throughout the property.' },
+        { icon: Coffee, name: 'Gourmet Dining', description: 'Premium in-house catering & dining options.' },
+        { icon: Shield, name: '24/7 Security', description: 'Professional security personnel and CCTV surveillance.' },
+        { icon: Users, name: 'Event Hosting', description: 'Exclusive space for corporate & private events.' }
+      ];
+
+      const FEATURES_LIST = [
+        {
+          title: 'Uninterrupted Power Supply',
+          content: 'Experience 24/7 electricity with our dedicated industrial generators and solar backup systems, ensuring your comfort is never compromised. We guarantee zero downtime during your stay.'
+        },
+        {
+          title: 'Prime Location & Accessibility',
+          content: 'Located at 2 Jehovah Street, we are centrally situated in Lagos, offering easy access to major business districts, shopping malls, and entertainment hubs while maintaining a serene environment.'
+        },
+        {
+          title: 'Daily Housekeeping & Concierge',
+          content: 'Our professional housekeeping team ensures your space remains pristine with daily cleaning services, fresh linens, and premium toiletries. Our concierge is available 24/7 to assist with any requests.'
+        },
+        {
+          title: 'Smart Home Integration',
+          content: 'Enjoy modern living with smart TVs, automated lighting systems, and keyless entry for a seamless and secure experience. High-speed internet keeps you connected to what matters.'
+        }
+      ];
+
+      const SOCIAL_LINKS = [
+        { icon: Facebook, href: '#', label: 'Facebook' },
+        { icon: Twitter, href: '#', label: 'Twitter' },
+        { icon: Instagram, href: '#', label: 'Instagram' },
+        { icon: Linkedin, href: '#', label: 'LinkedIn' }
+      ];
+
+      const TESTIMONIALS = [
+        {
+          name: 'Sarah Johnson',
+          rating: 5,
+          text: 'Exceptional service and luxurious accommodations. The attention to detail was impeccable.',
+          avatar: 'https://randomuser.me/api/portraits/women/44.jpg'
+        },
+        {
+          name: 'Michael Chen',
+          rating: 5,
+          text: 'Perfect location with stunning views. The staff went above and beyond to make our stay memorable.',
+          avatar: 'https://randomuser.me/api/portraits/men/32.jpg'
+        },
+        {
+          name: 'Emma Rodriguez',
+          rating: 5,
+          text: 'World-class amenities and breathtaking architecture. Truly a five-star experience.',
+          avatar: 'https://randomuser.me/api/portraits/women/68.jpg'
+        }
+      ];
+
+      // --- COMPONENTS ---
+
+      // RevealOnScroll Component
+      const RevealOnScroll = ({ children, className = '' }) => {
+        const [isVisible, setIsVisible] = useState(false);
+        const ref = useRef(null);
+
+        useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting) {
+                setIsVisible(true);
+                observer.disconnect();
+              }
+            },
+            {
+              threshold: 0.1,
+              rootMargin: '0px 0px -50px 0px'
+            }
+          );
+
+          if (ref.current) {
+            observer.observe(ref.current);
+          }
+
+          return () => observer.disconnect();
+        }, []);
+
+        return (
+          <div
+            ref={ref}
+            className={`transition-all duration-1000 ease-out transform ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+            } ${className}`}
+          >
+            {children}
+          </div>
+        );
+      };
+
+      // Header Component
+      const Header = ({ navLinks, whatsappLink, isDarkMode, toggleTheme }) => {
+        const [isMenuOpen, setIsMenuOpen] = useState(false);
+        const [isScrolled, setIsScrolled] = useState(false);
+
+        useEffect(() => {
+          const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+          };
+
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        const handleLinkClick = () => {
+          setIsMenuOpen(false);
+        };
+
+        const headerBackground = isScrolled || isMenuOpen 
+          ? 'bg-white/95 dark:bg-gray-950/95 shadow-md backdrop-blur-md border-gray-200 dark:border-amber-900/30' 
+          : 'bg-transparent border-transparent';
+
+        const headerPadding = isScrolled ? 'py-0' : 'py-2';
+        const textColor = isScrolled || isMenuOpen ? 'text-gray-800 dark:text-gray-300' : 'text-gray-100';
+
+        return (
+          <header className={`fixed top-0 w-full z-50 border-b transition-all duration-300 ${headerBackground} ${headerPadding}`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-20 transition-all duration-300">
+                <div className="flex items-center space-x-3">
+                   <img 
+                    src={LOGO_URL} 
+                    alt="IB House 02 Enterprises" 
+                    className={`w-auto object-contain transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'}`}
+                  />
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <nav className="hidden md:flex items-center space-x-8">
+                    {navLinks.map((link) => (
+                      <a 
+                        key={link.href} 
+                        href={link.href} 
+                        className={`${textColor} hover:text-amber-500 transition-colors duration-300 font-medium tracking-wide text-sm uppercase`}
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </nav>
+
+                  <div className="hidden md:flex items-center gap-4">
+                     <button 
+                      onClick={toggleTheme} 
+                      className={`p-2 rounded-full transition-colors ${isScrolled ? 'hover:bg-gray-100 dark:hover:bg-gray-800' : 'hover:bg-white/20 text-white'}`}
+                      aria-label="Toggle Theme"
+                    >
+                      {isDarkMode ? <Sun size={20} className={isScrolled ? 'text-amber-500' : 'text-amber-300'} /> : <Moon size={20} className="text-gray-600" />}
+                    </button>
+
+                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-full font-semibold transition-transform duration-300 hover:scale-105 shadow-lg shadow-amber-900/20 text-sm whitespace-nowrap">
+                      Book Now
+                    </a>
+                  </div>
+
+                  <button 
+                    className={`md:hidden transition-colors ${textColor} hover:text-amber-500`}
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    aria-label="Toggle menu"
+                  >
+                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile Menu */}
+              <div 
+                className={`md:hidden absolute top-full left-0 w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 overflow-hidden transition-all duration-300 ease-in-out shadow-2xl ${
+                  isMenuOpen ? 'max-h-[30rem] opacity-100' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <nav className="flex flex-col space-y-4 py-6 px-4">
+                  {navLinks.map((link) => (
+                    <a key={link.href} href={link.href} onClick={handleLinkClick} className="text-gray-800 dark:text-gray-300 hover:text-amber-500 transition-colors py-2 text-center text-lg font-medium">
+                      {link.label}
+                    </a>
+                  ))}
+                  
+                  <div className="flex justify-center py-2">
+                    <button 
+                      onClick={toggleTheme} 
+                      className="flex items-center gap-2 text-gray-800 dark:text-gray-300 hover:text-amber-500"
+                    >
+                      {isDarkMode ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} />}
+                      <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                    </button>
+                  </div>
+
+                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-3 rounded-full font-semibold transition-colors text-center shadow-lg mx-4 mt-2">
+                    Book Now
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </header>
+        );
+      };
+
+      // Hero Component
+      const Hero = ({ whatsappLink }) => {
+        const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+          }, 5000);
+          return () => clearInterval(interval);
+        }, []);
+
+        return (
+          <section id="home" className="relative h-screen overflow-hidden bg-gray-900">
+            <div className="absolute inset-0">
+              {HERO_IMAGES.map((src, index) => (
+                <img 
+                  key={src}
+                  src={src} 
+                  alt="IB House 02 Enterprises" 
+                  className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                    index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+              <div className="absolute inset-0 bg-black/50 dark:bg-black/60"></div>
+            </div>
+            
+            <div className="relative z-10 flex items-center justify-center h-full text-center px-4 pt-20">
+              <div className="max-w-4xl">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white drop-shadow-lg">
+                  Experience <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">Luxury Living</span> in Lagos
+                </h1>
+                <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto drop-shadow-md">
+                  Premium short-stay apartments at IB House 02 Enterprises, 2 Jehovah Street, Lagos
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg text-lg font-bold transition-transform duration-300 hover:scale-105 shadow-lg whitespace-nowrap border-2 border-transparent">
+                    Book Your Stay
+                  </a>
+                  <a href="#rooms" className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg text-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap">
+                    Explore Rooms
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+              {HERO_IMAGES.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentImageIndex ? 'bg-amber-500 scale-125' : 'bg-white/50 hover:bg-white/80'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      };
+
+      // Rooms Component
+      const Rooms = ({ roomTypes, whatsappLink }) => {
+        return (
+          <section id="rooms" className="py-24 bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <span className="text-amber-600 dark:text-amber-500 font-semibold tracking-wider uppercase text-sm mb-2 block">Accommodations</span>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+                  Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-200 dark:to-amber-500">Sanctuary</span>
+                </h2>
+                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                  Each room is a masterpiece of design, offering the perfect blend of luxury, technology, and comfort.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {roomTypes.map((room) => (
+                  <div key={room.name} className="group bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:border-amber-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-900/10 dark:hover:shadow-amber-900/10">
+                    <div className="relative overflow-hidden h-72">
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 z-10 transition-colors duration-500"></div>
+                      <img 
+                          src={room.image} 
+                          alt={room.name} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      />
+                      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent h-24 z-20"></div>
+                      <div className="absolute top-4 right-4 z-20 bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                          {room.price} <span className="text-xs font-normal opacity-90">/ Night</span>
+                      </div>
+                    </div>
+                    
+                    <div className="p-8 relative z-30 -mt-6">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">{room.name}</h3>
+                      
+                      <div className="space-y-4 mb-8">
+                        {room.features.slice(0, 4).map((feature) => (
+                          <div key={feature} className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
+                            <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3 flex-shrink-0"></div>
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
+
+                      <a 
+                          href={whatsappLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="w-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 hover:bg-amber-600 dark:hover:bg-amber-600 text-gray-900 dark:text-white hover:text-white py-4 rounded-xl font-semibold transition-all duration-300 group/btn border border-gray-200 dark:border-gray-700 hover:border-amber-500"
+                      >
+                        Book Now 
+                        <ArrowRight size={18} className="ml-2 transform group-hover/btn:translate-x-1 transition-transform" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Features Component
+      const Features = ({ features }) => {
+        const [openIndex, setOpenIndex] = useState(0);
+
+        const toggleFeature = (index) => {
+          setOpenIndex(openIndex === index ? null : index);
+        };
+
+        const getIcon = (index) => {
+          switch (index) {
+            case 0: return <Zap className="text-amber-500" />;
+            case 1: return <ShieldCheck className="text-amber-500" />;
+            case 2: return <Sparkles className="text-amber-500" />;
+            default: return <Star className="text-amber-500" />;
+          }
+        };
+
+        return (
+          <section id="features" className="py-24 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
+              {/* Background Decorative Elements */}
+              <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                  <div className="absolute top-20 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-20 left-0 w-96 h-96 bg-amber-700/5 rounded-full blur-3xl"></div>
+              </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                <div className="sticky top-32">
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
+                    Why Choose <br />
+                    <span className="bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-200 dark:to-amber-600 bg-clip-text text-transparent">IB House 02?</span>
+                  </h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                    We go beyond standard accommodation to provide a lifestyle. Our facility is designed with your absolute comfort and security in mind, ensuring a seamless experience from check-in to check-out.
+                  </p>
+                  <div className="hidden lg:block bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-sm dark:shadow-none">
+                      <div className="flex items-center space-x-2 text-amber-500 mb-2">
+                          <Star fill="currentColor" size={20} />
+                          <Star fill="currentColor" size={20} />
+                          <Star fill="currentColor" size={20} />
+                          <Star fill="currentColor" size={20} />
+                          <Star fill="currentColor" size={20} />
+                      </div>
+                      <p className="text-gray-900 dark:text-white font-semibold text-lg">"The best short-stay experience in Lagos."</p>
+                      <p className="text-gray-500 text-sm mt-1">Rated 5-Star by over 500 guests</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {features.map((feature, index) => (
+                    <div 
+                      key={index} 
+                      className={`border rounded-xl overflow-hidden transition-all duration-300 ${
+                        openIndex === index 
+                          ? 'bg-gray-50 dark:bg-gray-800 border-amber-500/50 shadow-lg shadow-amber-900/10' 
+                          : 'bg-white dark:bg-gray-800/30 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/80'
+                      }`}
+                    >
+                      <button
+                        className="w-full flex justify-between items-center p-6 text-left focus:outline-none group"
+                        onClick={() => toggleFeature(index)}
+                        aria-expanded={openIndex === index}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`p-2 rounded-lg transition-colors ${openIndex === index ? 'bg-amber-500/10' : 'bg-gray-100 dark:bg-gray-700/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700'}`}>
+                             {getIcon(index)}
+                          </div>
+                          <span className={`text-xl font-bold transition-colors ${openIndex === index ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-gray-200 group-hover:text-amber-600 dark:group-hover:text-white'}`}>
+                            {feature.title}
+                          </span>
+                        </div>
+                        {openIndex === index ? (
+                          <ChevronUp className="text-amber-500 dark:text-amber-400 transition-transform duration-300" />
+                        ) : (
+                          <ChevronDown className="text-gray-400 dark:text-gray-500 group-hover:text-amber-500 dark:group-hover:text-amber-200 transition-transform duration-300" />
+                        )}
+                      </button>
+                      <div 
+                        className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                          openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        <div className="p-6 pt-0 pl-[5.5rem] text-gray-600 dark:text-gray-300 leading-relaxed">
+                          {feature.content}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Amenities Component
+      const Amenities = ({ amenities }) => {
+        return (
+          <section id="amenities" className="py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-300 dark:to-amber-500 bg-clip-text text-transparent">
+                  Premium Amenities
+                </h2>
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                  Everything you need for a comfortable and secure stay.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {amenities.map((amenity) => (
+                  <div key={amenity.name} className="text-center p-8 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-500 transition-all duration-300 transform hover:scale-105 shadow-lg dark:shadow-none">
+                    <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg text-white">
+                      <amenity.icon size={32} />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{amenity.name}</h3>
+                    <p className="text-gray-600 dark:text-gray-400">{amenity.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Testimonials Component
+      const Testimonials = ({ testimonials }) => {
+        return (
+          <section className="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-300 dark:to-amber-500 bg-clip-text text-transparent">
+                  Guest Reviews
+                </h2>
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                  Hear what our guests say about IB House 02 Enterprises.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-transparent hover:border-amber-500/50 transition-colors duration-300">
+                    <div className="flex items-center mb-4">
+                      <img src={testimonial.avatar} alt={testimonial.name} className="w-14 h-14 rounded-full mr-4 border-2 border-amber-400" />
+                      <div>
+                        <h4 className="font-bold text-lg text-gray-900 dark:text-white">{testimonial.name}</h4>
+                        <div className="flex text-amber-500 dark:text-amber-400">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} size={16} fill="currentColor" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 italic">"{testimonial.text}"</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Contact Component
+      const Contact = ({ whatsappLink }) => {
+        const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+        const [errors, setErrors] = useState({});
+        const [isSubmitting, setIsSubmitting] = useState(false);
+        const [isSuccess, setIsSuccess] = useState(false);
+
+        const validate = () => {
+          const newErrors = {};
+          let isValid = true;
+
+          if (!form.name.trim()) {
+            newErrors.name = 'Full name is required';
+            isValid = false;
+          }
+          
+          const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+          if (!form.email.trim()) {
+            newErrors.email = 'Email address is required';
+            isValid = false;
+          } else if (!emailRegex.test(form.email)) {
+            newErrors.email = 'Please enter a valid email address';
+            isValid = false;
+          }
+
+          const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+          if (!form.phone.trim()) {
+            newErrors.phone = 'Phone number is required';
+            isValid = false;
+          } else if (!phoneRegex.test(form.phone) && form.phone.length < 10) {
+            newErrors.phone = 'Please enter a valid phone number';
+            isValid = false;
+          }
+
+          if (!form.message.trim()) {
+            newErrors.message = 'Please enter your message';
+            isValid = false;
+          } else if (form.message.length < 10) {
+            newErrors.message = 'Message must be at least 10 characters';
+            isValid = false;
+          }
+
+          setErrors(newErrors);
+          return isValid;
+        };
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          if (validate()) {
+            setIsSubmitting(true);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            setIsSubmitting(false);
+            setIsSuccess(true);
+            setForm({ name: '', email: '', phone: '', message: '' });
+            setTimeout(() => setIsSuccess(false), 5000);
+          }
+        };
+
+        const handleChange = (e) => {
+          const { name, value } = e.target;
+          setForm(prev => ({ ...prev, [name]: value }));
+          if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: undefined }));
+          }
+        };
+
+        return (
+          <section id="contact" className="py-24 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div className="flex flex-col justify-between">
+                  <div>
+                      <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-300 dark:to-amber-500 bg-clip-text text-transparent">
+                      Get in Touch
+                      </h2>
+                      <p className="text-lg text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
+                      Have specific requirements for your stay or need assistance? Our support team is available 24/7 to assist you.
+                      </p>
+                      
+                      <div className="space-y-8 text-lg mb-10">
+                      <div className="flex items-start group">
+                          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl mr-5 text-amber-500 group-hover:bg-amber-500 group-hover:text-white dark:group-hover:text-black transition-colors duration-300 shadow-md">
+                              <MapPin size={24} />
+                          </div>
+                          <div>
+                              <h4 className="font-bold text-gray-900 dark:text-white text-xl">Visit Us</h4>
+                              <p className="text-gray-600 dark:text-gray-400 mt-1">2 Jehovah Street,<br />Lagos, Nigeria</p>
+                          </div>
+                      </div>
+                      <div className="flex items-start group">
+                          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl mr-5 text-amber-500 group-hover:bg-amber-500 group-hover:text-white dark:group-hover:text-black transition-colors duration-300 shadow-md">
+                              <Phone size={24} />
+                          </div>
+                          <div>
+                              <h4 className="font-bold text-gray-900 dark:text-white text-xl">Call Us</h4>
+                              <p className="text-gray-600 dark:text-gray-400 mt-1">+234 XXX XXX XXXX</p>
+                          </div>
+                      </div>
+                      <div className="flex items-start group">
+                          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl mr-5 text-amber-500 group-hover:bg-amber-500 group-hover:text-white dark:group-hover:text-black transition-colors duration-300 shadow-md">
+                              <Mail size={24} />
+                          </div>
+                          <div>
+                              <h4 className="font-bold text-gray-900 dark:text-white text-xl">Email Us</h4>
+                              <p className="text-gray-600 dark:text-gray-400 mt-1">info@ibhouse02.com</p>
+                          </div>
+                      </div>
+                      </div>
+                  </div>
+
+                  <a 
+                    href={whatsappLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-green-600 hover:bg-green-700 text-white py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-green-900/30 w-full sm:w-auto justify-center group"
+                  >
+                    <Phone className="mr-3 group-hover:animate-pulse" size={20} />
+                    Chat on WhatsApp
+                  </a>
+                </div>
+
+                <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm p-8 md:p-10 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white border-l-4 border-amber-500 pl-4">Send us a Message</h3>
+                  
+                  {isSuccess ? (
+                    <div className="h-full flex flex-col items-center justify-center py-12 animate-fade-in">
+                      <div className="bg-green-500/10 p-6 rounded-full mb-6">
+                          <CheckCircle className="text-green-500" size={64} />
+                      </div>
+                      <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h4>
+                      <p className="text-gray-600 dark:text-gray-400 text-center max-w-xs">We have received your message and will get back to you shortly.</p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="group">
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 ml-1">Full Name</label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={form.name}
+                          onChange={handleChange}
+                          className={`w-full bg-gray-50 dark:bg-gray-900 border ${errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'} rounded-xl px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all`}
+                          placeholder="John Doe"
+                        />
+                        {errors.name && <p className="text-red-500 dark:text-red-400 text-xs mt-2 flex items-center ml-1"><AlertCircle size={12} className="mr-1"/> {errors.name}</p>}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                              <label htmlFor="email" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 ml-1">Email Address</label>
+                              <input
+                                  type="email"
+                                  id="email"
+                                  name="email"
+                                  value={form.email}
+                                  onChange={handleChange}
+                                  className={`w-full bg-gray-50 dark:bg-gray-900 border ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'} rounded-xl px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all`}
+                                  placeholder="john@example.com"
+                              />
+                              {errors.email && <p className="text-red-500 dark:text-red-400 text-xs mt-2 flex items-center ml-1"><AlertCircle size={12} className="mr-1"/> {errors.email}</p>}
+                          </div>
+                          <div>
+                              <label htmlFor="phone" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 ml-1">Phone Number</label>
+                              <input
+                                  type="tel"
+                                  id="phone"
+                                  name="phone"
+                                  value={form.phone}
+                                  onChange={handleChange}
+                                  className={`w-full bg-gray-50 dark:bg-gray-900 border ${errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'} rounded-xl px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all`}
+                                  placeholder="+234..."
+                              />
+                              {errors.phone && <p className="text-red-500 dark:text-red-400 text-xs mt-2 flex items-center ml-1"><AlertCircle size={12} className="mr-1"/> {errors.phone}</p>}
+                          </div>
+                      </div>
+
+                      <div>
+                        <label htmlFor="message" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 ml-1">Message</label>
+                        <textarea
+                          id="message"
+                          name="message"
+                          value={form.message}
+                          onChange={handleChange}
+                          rows={4}
+                          className={`w-full bg-gray-50 dark:bg-gray-900 border ${errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'} rounded-xl px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none`}
+                          placeholder="Tell us about your stay requirements..."
+                        ></textarea>
+                        {errors.message && <p className="text-red-500 dark:text-red-400 text-xs mt-2 flex items-center ml-1"><AlertCircle size={12} className="mr-1"/> {errors.message}</p>}
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-xl shadow-amber-900/20 flex justify-center items-center transform active:scale-[0.98]"
+                      >
+                        {isSubmitting ? (
+                          <span className="flex items-center">
+                              <Loader2 className="animate-spin mr-2" size={20} /> Sending...
+                          </span>
+                        ) : (
+                          <>
+                            Send Message <Send className="ml-2" size={20} />
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Footer Component
+      const Footer = ({ navLinks }) => {
+        const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://ibhouse02.com';
+
+        const shareLinks = [
+          {
+            icon: Facebook,
+            href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
+            label: 'Share on Facebook',
+            color: 'hover:bg-blue-600'
+          },
+          {
+            icon: Twitter,
+            href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=Check+out+IB+House+02+Enterprises+for+luxury+short+stays+in+Lagos!`,
+            label: 'Share on Twitter',
+            color: 'hover:bg-sky-500'
+          },
+          {
+            icon: LinkIcon,
+            href: '#',
+            label: 'Copy Link',
+            color: 'hover:bg-gray-600',
+            onClick: (e) => {
+              e.preventDefault();
+              navigator.clipboard.writeText(currentUrl);
+              alert('Link copied to clipboard!');
+            }
+          }
+        ];
+
+        return (
+          <footer className="bg-gray-100 dark:bg-black border-t border-gray-200 dark:border-gray-900 pt-16 pb-8 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div className="col-span-1 md:col-span-2">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <img src={LOGO_URL} alt="IB House 02" className="h-12 w-auto" />
+                    <span className="text-xl font-bold tracking-wider text-gray-900 dark:text-white">IB HOUSE 02</span>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-400 max-w-md mb-8 leading-relaxed">
+                    Premium short-stay accommodations in the heart of Lagos. Experience the perfect blend of luxury, security, and comfort at 2 Jehovah Street.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <h5 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Follow Us</h5>
+                    <div className="flex space-x-4">
+                      {SOCIAL_LINKS.map((social) => (
+                        <a 
+                          key={social.label} 
+                          href={social.href} 
+                          className="bg-white dark:bg-gray-900 p-2.5 rounded-full text-gray-600 dark:text-gray-400 hover:text-white hover:bg-amber-600 transition-all duration-300 transform hover:scale-110 border border-gray-200 dark:border-gray-800"
+                          aria-label={social.label}
+                        >
+                          <social.icon size={18} />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-bold text-lg mb-6 text-gray-900 dark:text-white border-b-2 border-amber-600 inline-block pb-1">Quick Links</h4>
+                  <ul className="space-y-3 text-gray-600 dark:text-gray-400">
+                    {navLinks.map(link => (
+                       <li key={link.href}>
+                         <a href={link.href} className="hover:text-amber-600 dark:hover:text-amber-500 transition-colors flex items-center group">
+                           <span className="w-1.5 h-1.5 bg-amber-600 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                           {link.label}
+                         </a>
+                       </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-bold text-lg mb-6 text-gray-900 dark:text-white border-b-2 border-amber-600 inline-block pb-1">Contact Info</h4>
+                  <ul className="space-y-4 text-gray-600 dark:text-gray-400">
+                    <li className="flex items-start">
+                      <span className="text-amber-600 mr-2 font-bold mt-1">•</span>
+                      <span>2 Jehovah Street<br/>Lagos, Nigeria</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-amber-600 mr-2 font-bold">•</span>
+                      <span>+234 XXX XXX XXXX</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-amber-600 mr-2 font-bold">•</span>
+                      <span>info@ibhouse02.com</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="border-t border-gray-200 dark:border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p className="text-gray-600 dark:text-gray-600 text-sm mb-4 md:mb-0">
+                  © {new Date().getFullYear()} IB House 02 Enterprises. All rights reserved.
+                </p>
+                
+                <div className="flex items-center space-x-4 bg-white dark:bg-gray-900/50 py-2 px-4 rounded-full border border-gray-200 dark:border-gray-800">
+                  <span className="text-gray-500 text-sm font-medium flex items-center">
+                    <Share2 size={14} className="mr-2" /> Share this page:
+                  </span>
+                  {shareLinks.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      onClick={link.onClick}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`text-gray-400 hover:text-white p-1.5 rounded-full transition-colors ${link.color}`}
+                      title={link.label}
+                    >
+                      <link.icon size={16} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </footer>
+        );
+      };
+
+      // Main App Component
+      const App = () => {
+        const [isDarkMode, setIsDarkMode] = useState(true);
+
+        useEffect(() => {
+          if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }, [isDarkMode]);
+
+        const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
+        return (
+          <div className={`min-h-screen font-sans selection:bg-amber-500 selection:text-black transition-colors duration-300 ${isDarkMode ? 'bg-gray-950 text-white' : 'bg-gray-50 text-gray-900'}`}>
+            <Header 
+              navLinks={NAV_LINKS} 
+              whatsappLink={WHATSAPP_LINK} 
+              isDarkMode={isDarkMode} 
+              toggleTheme={toggleTheme} 
+            />
+            <main>
+              <Hero whatsappLink={WHATSAPP_LINK} />
+              
+              <RevealOnScroll>
+                <Rooms roomTypes={ROOM_TYPES} whatsappLink={WHATSAPP_LINK} />
+              </RevealOnScroll>
+              
+              <RevealOnScroll>
+                <Features features={FEATURES_LIST} />
+              </RevealOnScroll>
+              
+              <RevealOnScroll>
+                <Amenities amenities={AMENITIES} />
+              </RevealOnScroll>
+              
+              <RevealOnScroll>
+                <Testimonials testimonials={TESTIMONIALS} />
+              </RevealOnScroll>
+              
+              <RevealOnScroll>
+                <Contact whatsappLink={WHATSAPP_LINK} />
+              </RevealOnScroll>
+            </main>
+            <Footer navLinks={NAV_LINKS} />
+          </div>
+        );
+      };
+
+      // Render the App
+      const root = createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
   </body>
 </html>

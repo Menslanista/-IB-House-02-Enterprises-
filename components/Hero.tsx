@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HERO_IMAGES } from '../constants';
 
@@ -17,7 +16,7 @@ const Hero: React.FC<HeroProps> = ({ whatsappLink }) => {
   }, []);
 
   return (
-    <section id="home" className="relative h-screen overflow-hidden">
+    <section id="home" className="relative h-screen overflow-hidden bg-gray-900">
       <div className="absolute inset-0">
         {HERO_IMAGES.map((src, index) => (
           <img 
@@ -29,19 +28,20 @@ const Hero: React.FC<HeroProps> = ({ whatsappLink }) => {
             }`}
           />
         ))}
-        <div className="absolute inset-0 bg-black/60"></div>
+        {/* Slightly darker overlay for better text contrast in all modes */}
+        <div className="absolute inset-0 bg-black/50 dark:bg-black/60"></div>
       </div>
       
-      <div className="relative z-10 flex items-center justify-center h-full text-center px-4">
+      <div className="relative z-10 flex items-center justify-center h-full text-center px-4 pt-20">
         <div className="max-w-4xl">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-amber-200 to-amber-400 bg-clip-text text-transparent drop-shadow-lg">
-            Experience Luxury Living in Lagos
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white drop-shadow-lg">
+            Experience <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">Luxury Living</span> in Lagos
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto drop-shadow-md">
             Premium short-stay apartments at IB House 02 Enterprises, 2 Jehovah Street, Lagos
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg text-lg font-bold transition-transform duration-300 hover:scale-105 shadow-lg whitespace-nowrap">
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg text-lg font-bold transition-transform duration-300 hover:scale-105 shadow-lg whitespace-nowrap border-2 border-transparent">
               Book Your Stay
             </a>
             <a href="#rooms" className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg text-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap">
@@ -57,7 +57,7 @@ const Hero: React.FC<HeroProps> = ({ whatsappLink }) => {
             key={index}
             onClick={() => setCurrentImageIndex(index)}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentImageIndex ? 'bg-amber-400 scale-125' : 'bg-white/50 hover:bg-white/80'
+              index === currentImageIndex ? 'bg-amber-500 scale-125' : 'bg-white/50 hover:bg-white/80'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

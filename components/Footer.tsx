@@ -37,16 +37,16 @@ const Footer: React.FC<FooterProps> = ({ navLinks }) => {
   ];
 
   return (
-    <footer className="bg-black border-t border-gray-900 pt-16 pb-8">
+    <footer className="bg-gray-100 dark:bg-black border-t border-gray-200 dark:border-gray-900 pt-16 pb-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
               <img src={LOGO_URL} alt="IB House 02" className="h-12 w-auto" />
-              <span className="text-xl font-bold tracking-wider text-white">IB HOUSE 02</span>
+              <span className="text-xl font-bold tracking-wider text-gray-900 dark:text-white">IB HOUSE 02</span>
             </div>
-            <p className="text-gray-400 max-w-md mb-8 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 max-w-md mb-8 leading-relaxed">
               Premium short-stay accommodations in the heart of Lagos. Experience the perfect blend of luxury, security, and comfort at 2 Jehovah Street.
             </p>
             
@@ -57,7 +57,7 @@ const Footer: React.FC<FooterProps> = ({ navLinks }) => {
                   <a 
                     key={social.label} 
                     href={social.href} 
-                    className="bg-gray-900 p-2.5 rounded-full text-gray-400 hover:text-white hover:bg-amber-600 transition-all duration-300 transform hover:scale-110 border border-gray-800"
+                    className="bg-white dark:bg-gray-900 p-2.5 rounded-full text-gray-600 dark:text-gray-400 hover:text-white hover:bg-amber-600 transition-all duration-300 transform hover:scale-110 border border-gray-200 dark:border-gray-800"
                     aria-label={social.label}
                   >
                     <social.icon size={18} />
@@ -69,11 +69,11 @@ const Footer: React.FC<FooterProps> = ({ navLinks }) => {
           
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-lg mb-6 text-white border-b-2 border-amber-600 inline-block pb-1">Quick Links</h4>
-            <ul className="space-y-3 text-gray-400">
+            <h4 className="font-bold text-lg mb-6 text-gray-900 dark:text-white border-b-2 border-amber-600 inline-block pb-1">Quick Links</h4>
+            <ul className="space-y-3 text-gray-600 dark:text-gray-400">
               {navLinks.map(link => (
                  <li key={link.href}>
-                   <a href={link.href} className="hover:text-amber-500 transition-colors flex items-center group">
+                   <a href={link.href} className="hover:text-amber-600 dark:hover:text-amber-500 transition-colors flex items-center group">
                      <span className="w-1.5 h-1.5 bg-amber-600 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                      {link.label}
                    </a>
@@ -84,8 +84,8 @@ const Footer: React.FC<FooterProps> = ({ navLinks }) => {
           
           {/* Contact Info */}
           <div>
-            <h4 className="font-bold text-lg mb-6 text-white border-b-2 border-amber-600 inline-block pb-1">Contact Info</h4>
-            <ul className="space-y-4 text-gray-400">
+            <h4 className="font-bold text-lg mb-6 text-gray-900 dark:text-white border-b-2 border-amber-600 inline-block pb-1">Contact Info</h4>
+            <ul className="space-y-4 text-gray-600 dark:text-gray-400">
               <li className="flex items-start">
                 <span className="text-amber-600 mr-2 font-bold mt-1">•</span>
                 <span>2 Jehovah Street<br/>Lagos, Nigeria</span>
@@ -103,12 +103,12 @@ const Footer: React.FC<FooterProps> = ({ navLinks }) => {
         </div>
         
         {/* Share Section & Copyright */}
-        <div className="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-600 text-sm mb-4 md:mb-0">
+        <div className="border-t border-gray-200 dark:border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-600 dark:text-gray-600 text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()} IB House 02 Enterprises. All rights reserved.
           </p>
           
-          <div className="flex items-center space-x-4 bg-gray-900/50 py-2 px-4 rounded-full border border-gray-800">
+          <div className="flex items-center space-x-4 bg-white dark:bg-gray-900/50 py-2 px-4 rounded-full border border-gray-200 dark:border-gray-800">
             <span className="text-gray-500 text-sm font-medium flex items-center">
               <Share2 size={14} className="mr-2" /> Share this page:
             </span>
